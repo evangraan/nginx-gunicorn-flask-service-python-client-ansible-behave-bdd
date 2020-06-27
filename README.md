@@ -18,6 +18,10 @@ In a production environment, the two servers may have the same username, but pas
 better would be to lock the servers down to specific white-listed IPs, disable root login and enable key authentication.
 The system ansible is run from then can login without requiring a username and password. 
 
+The ansible provisioning configures nginx with a self-signed certificate. For production environments this should be
+replaced with Certbot (lets-encrypt) once DNS has been configured so that the FQDN for the server resolves correctly.
+
+
 # Installation
 ## Ansible configuration and support
 * Install ansible

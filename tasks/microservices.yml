@@ -108,13 +108,13 @@
 
   - name: Make SELinux policy management script executable
     file:
-      path: "{{ service_directory}}/se_policy.sh"
+      path: "{{ service_directory }}/se_policy.sh"
       state: touch
       mode: u+x
 
   - name: Set SELinux policy to allow API traffic
     become: true
-    shell: "{{ service_directory}}/se_policy.sh&"
+    shell: "{{ service_directory }}/se_policy.sh"
 
   - name: Create SSL key repository
     become: true
@@ -126,38 +126,38 @@
       mode: 0700
 
   - name: Add SSL certificate
-      become: true
-      copy:
-        src: "{{ service_directory }}/nginx-selfsigned.crt"
-        remote_src: yes
-        dest: /etc/ssl/certs/nginx-selfsigned.crt
+    become: true
+    copy:
+      src: "{{ service_directory }}/nginx-selfsigned.crt"
+      remote_src: yes
+      dest: /etc/ssl/certs/nginx-selfsigned.crt
 
   - name: Add SSL key
-      become: true
-      copy:
-        src: "{{ service_directory }}/nginx-selfsigned.key"
-        remote_src: yes
-        dest: /etc/ssl/private/nginx-selfsigned.key
+    become: true
+    copy:
+      src: "{{ service_directory }}/nginx-selfsigned.key"
+      remote_src: yes
+      dest: /etc/ssl/private/nginx-selfsigned.key
 
   - name: Add Diffie Hellman group
-      become: true
-      copy:
-        src: "{{ service_directory }}/dhparam.pem"
-        remote_src: yes
-        dest: /etc/ssl/certs/dhparam.pem
+    become: true
+    copy:
+      src: "{{ service_directory }}/dhparam.pem"
+      remote_src: yes
+      dest: /etc/ssl/certs/dhparam.pem
 
   - name: Enable HTTP redirect
-      become: true
-      copy:
-        src: "{{ service_directory }}/ssl-redirect.conf"
-        remote_src: yes
-        dest: /etc/nginx/default.d/ssl-redirect.conf
+    become: true
+    copy:
+      src: "{{ service_directory }}/ssl-redirect.conf"
+      remote_src: yes
+      dest: /etc/nginx/default.d/ssl-redirect.conf
 
   - name: Make service management script executable
-      file:
-        path: "{{ service_directory }}/start_services.sh"
-        state: touch
-        mode: u+x
+    file:
+      path: "{{ service_directory }}/start_services.sh"
+      state: touch
+      mode: u+x
 
   - name: Ensure service and nginx are running and starts on boot
     become: true
