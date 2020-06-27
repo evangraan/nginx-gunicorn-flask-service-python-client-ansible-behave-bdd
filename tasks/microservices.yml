@@ -58,10 +58,6 @@
       name: firewalld
       state: started
 
-  - name: Open firewall port 5000
-    become: true
-    firewalld: port=5000/tcp zone=public permanent=true state=enabled immediate=yes
-
   - name: Open firewall port 22
     become: true
     firewalld: port=22/tcp zone=public permanent=true state=enabled immediate=yes
@@ -70,7 +66,12 @@
     become: true
     firewalld: port=80/tcp zone=public permanent=true state=enabled immediate=yes
 
+  - name: Open firewall port 443
+    become: true
+    firewalld: port=443/tcp zone=public permanent=true state=enabled immediate=yes
+
   - name: Create socket for gunicorn
+    become: true
     file:
       path: /var/sockets
       state: directory
@@ -96,16 +97,15 @@
     copy:
       src: "{{ service_directory }}/service.conf"
       remote_src: yes
-      dest: /etc/nginx/conf/service.conf
+      dest: /etc/nginx/conf.d/service.conf
 
   - name: Configure the proxy with the server IP address
     become: true
     replace:
-      path: /etc/nginx/conf/service.conf
-      regext: "SERVERIP"
+      path: /etc/nginx/conf.d/service.conf
+      regexp: "SERVERIP"
       replace: "{{ ansible_default_ipv4.address }}"
-      
-  - name: Make sure the service is running
-    systemd:
-      state: started
-      name: service
+
+  - name: Ensure service and nginx are running
+    become: true
+    shell: "{{ service_directory }}/start_services.sh"
