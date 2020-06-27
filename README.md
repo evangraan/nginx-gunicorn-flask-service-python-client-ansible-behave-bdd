@@ -26,8 +26,8 @@ The system ansible is run from then can login without requiring a username and p
 repository  serves as a reference
 * Ensure on both servers that the username configured is in the sudoers file (visudo) or in a group that allows sudo
 
-## Servers
-```ansible-playbook -i hosts base.yml```
+## API Server
+```ansible-playbook -i hosts api.yml```
 
 
 ## Client
