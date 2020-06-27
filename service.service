@@ -6,7 +6,7 @@ After=network.target
 User=USER
 Group=nginx
 WorkingDirectory=/home/USER/service
-ExecStart=/usr/local/bin/gunicorn --workers 3 --bind unix:service.sock -m 007 wsgi
+ExecStart=source venv/bin/activate&&gunicorn --workers 3 --bind unix:service.sock -m 007 app:app
 
 [Install]
 WantedBy=multi-user.target
