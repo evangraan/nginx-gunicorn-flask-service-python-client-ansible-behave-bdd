@@ -1,8 +1,7 @@
-[centos]
+[api]
 192.168.1.217
-192.168.1.218
 
-[centos:vars]
+[api:vars]
 ansible_connection=ssh
 ansible_user=ernstv
 ansible_ssh_pass=developmentpassword

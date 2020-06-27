@@ -5,8 +5,8 @@ After=network.target
 [Service]
 User=USER
 Group=nginx
-WorkingDirectory=/home/USER/service
-ExecStart=source venv/bin/activate&&gunicorn --workers 3 --bind unix:service.sock -m 007 app:app
+WorkingDirectory=/var/sockets
+ExecStart=/bin/bash -c "cd /home/USER/service&&source venv/bin/activate&&gunicorn --workers 3 --bind unix:/var/sockets/service.sock -m 007 app:app >> service.log"
 
 [Install]
 WantedBy=multi-user.target

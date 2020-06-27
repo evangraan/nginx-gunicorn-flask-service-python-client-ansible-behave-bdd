@@ -66,17 +66,45 @@
     become: true
     firewalld: port=22/tcp zone=public permanent=true state=enabled immediate=yes
 
+  - name: Open firewall port 80
+    become: true
+    firewalld: port=80/tcp zone=public permanent=true state=enabled immediate=yes
+
+  - name: Create socket for gunicorn
+    file:
+      path: /var/sockets
+      state: directory
+      owner: "{{ ansible_user }}"
+      group: nginx
+
+  - name: Add the service to systemd
+    become: true
+    copy:
+      src: "{{ service_directory }}/service.service"
+      remote_src: yes
+      dest: /etc/systemd/system/service.service
+
   - name: Configure the service with the correct username
+    become: true
     replace:
-      path: "{{ service_directory }}/service.service"
+      path: /etc/systemd/system/service.service
       regexp: "USER"
       replace: "{{ ansible_user }}"
 
-  - name: Add the service to systemd
+  - name: Proxy using nginx
+    become: true
     copy:
-      src: "{{ service_directory }}/service.service"
-      dest: /etc/systemd/system/service.service
+      src: "{{ service_directory }}/service.conf"
+      remote_src: yes
+      dest: /etc/nginx/conf/service.conf
 
+  - name: Configure the proxy with the server IP address
+    become: true
+    replace:
+      path: /etc/nginx/conf/service.conf
+      regext: "SERVERIP"
+      replace: "{{ ansible_default_ipv4.address }}"
+      
   - name: Make sure the service is running
     systemd:
       state: started
