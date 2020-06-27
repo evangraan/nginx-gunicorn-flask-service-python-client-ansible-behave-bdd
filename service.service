@@ -1,0 +1,12 @@
+[Unit]
+Description=Reference nginx-gunicorn-flask API service
+After=network.target
+
+[Service]
+User=USER
+Group=nginx
+WorkingDirectory=/home/USER/service
+ExecStart=/usr/local/bin/gunicorn --workers 3 --bind unix:service.sock -m 007 wsgi
+
+[Install]
+WantedBy=multi-user.target

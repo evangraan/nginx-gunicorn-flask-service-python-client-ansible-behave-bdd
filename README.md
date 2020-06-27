@@ -30,5 +30,10 @@ repository  serves as a reference
 ```ansible-playbook -i hosts base.yml```
 
 
+## Client
+
+## API Service
+The API service makes use of JSend (https://github.com/omniti-labs/jsend) for all responses.
+
 
 

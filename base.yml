@@ -2,7 +2,6 @@
 
 - name: Base setup for servers
   hosts: centos
-  become: true
   environment:
     PATH: /usr/local/bin:{{ ansible_env.PATH }}
 

@@ -22,7 +22,7 @@
       state: present
 
   - name: Install virtualenv via pip
-    become: yes
+    become: true
     become_user: root
     pip:
       name: virtualenv

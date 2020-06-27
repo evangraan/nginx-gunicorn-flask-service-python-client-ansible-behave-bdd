@@ -30,21 +30,54 @@
     register: service_directory_exists
 
   - name: Clone service if not present
+    become: false
     git:
       repo: https://github.com/evangraan/nginx-gunicorn-flask-service-python-client-ansible-provisioning-behave-bdd.git
       dest: "{{ service_directory }}"
     when: service_directory_exists.stat.exists == false
 
   - name: Install microservices environment
+    become: false
     pip:
       requirements: "{{ service_directory }}/requirements.txt"
       virtualenv: "{{ service_directory }}/venv"
       virtualenv_python: python3.6.8
 
   - name: Install microservices libraries
+    become: false
     pip:
       name:
         - gunicorn
         - flask
       state: present
       executable: pip3
+
+  - name: start service firewalld
+    become: true
+    systemd:
+      name: firewalld
+      state: started
+
+  - name: Open firewall port 5000
+    become: true
+    firewalld: port=5000/tcp zone=public permanent=true state=enabled immediate=yes
+
+  - name: Open firewall port 22
+    become: true
+    firewalld: port=22/tcp zone=public permanent=true state=enabled immediate=yes
+
+  - name: Configure the service with the correct username
+    replace:
+      path: "{{ service_directory }}/service.service"
+      regexp: "USER"
+      replace: "{{ ansible_user }}"
+
+  - name: Add the service to systemd
+    copy:
+      src: "{{ service_directory }}/service.service"
+      dest: /etc/systemd/system/service.service
+
+  - name: Make sure the service is running
+    systemd:
+      state: started
+      name: service
