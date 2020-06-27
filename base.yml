@@ -1,0 +1,11 @@
+---
+
+- name: Base setup for servers
+  hosts: centos
+  become: true
+  environment:
+    PATH: /usr/local/bin:{{ ansible_env.PATH }}
+
+  tasks:
+    - import_tasks: tasks/python3.yml
+    - import_tasks: tasks/microservices.yml

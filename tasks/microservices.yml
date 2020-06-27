@@ -1,0 +1,50 @@
+---
+
+  - name: Expand system package repository
+    become: true
+    yum:
+      name:
+        - epel-release
+      state: present
+
+  - name: upgrade all packages
+    become: true
+    yum:
+      name:
+        - "*"
+      state: latest
+
+  - name: Install nginx
+    become: true
+    yum:
+      name:
+        - nginx
+      state: present
+
+  - set_fact:
+     service_directory: "/home/{{ ansible_user }}/service"
+
+  - name: Check service directory
+    stat:
+      path: "{{ service_directory }}"
+    register: service_directory_exists
+
+  - name: Clone service if not present
+    git:
+      repo: https://github.com/evangraan/nginx-gunicorn-flask-service-python-client-ansible-provisioning-behave-bdd.git
+      dest: "{{ service_directory }}"
+    when: service_directory_exists.stat.exists == false
+
+  - name: Install microservices environment
+    pip:
+      requirements: "{{ service_directory }}/requirements.txt"
+      virtualenv: "{{ service_directory }}/venv"
+      virtualenv_python: python3.6.8
+
+  - name: Install microservices libraries
+    pip:
+      name:
+        - gunicorn
+        - flask
+      state: present
+      executable: pip3
