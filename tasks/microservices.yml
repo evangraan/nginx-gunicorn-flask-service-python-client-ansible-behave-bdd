@@ -44,7 +44,7 @@
       virtualenv_python: python3.6.8
 
   - name: Install microservices libraries
-    become: false
+    become: true
     pip:
       name:
         - gunicorn
@@ -52,7 +52,7 @@
       state: present
       executable: pip3
 
-  - name: start service firewalld
+  - name: start service firewald
     become: true
     systemd:
       name: firewalld
@@ -106,7 +106,13 @@
       regexp: "SERVERIP"
       replace: "{{ ansible_default_ipv4.address }}"
 
-  - name: Ensure service and nginx are running
+  - name: Make service management script executable
+    file:
+      path: "{{ service_directory }}/start_services.sh"
+      state: touch
+      mode: u+x
+
+  - name: Ensure service and nginx are running and starts on boot
     become: true
-    shell: "chmod +x {{ service_directory }}/start_services.sh&&{{ service_directory }}/start_services.sh&"
-    warn: false
+    shell: "{{ service_directory }}/start_services.sh&"
+

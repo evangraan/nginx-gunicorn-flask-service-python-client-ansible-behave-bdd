@@ -24,7 +24,7 @@ The system ansible is run from then can login without requiring a username and p
 * Install sshpass
 * Create a hosts file with both servers' IP addresses and the SSH login username and password. The hosts file in this 
 repository  serves as a reference
-* Ensure on both servers that the username configured is in the sudoers file (visudo)
+* Ensure on both servers that the username configured is in the sudoers file (visudo) or in a group that allows sudo
 
 ## Servers
 ```ansible-playbook -i hosts base.yml```
