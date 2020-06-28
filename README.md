@@ -58,7 +58,7 @@ Log into the client and configure in config.json the node uuid, secure token and
 
 # Functional overview
 ## Client application
-* TBD cron is used to schedule running of the client application every 5 seconds. This is done in clientapp.yml (ansible)
+* The client application captures process information and POSTs it to the service API every 5 seconds
 * The client application timestamps records when measurement is taken (seconds since epoch)
 * The client application logs to client.log
 
