@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 import time
 import logging
@@ -14,7 +15,7 @@ if os.path.exists(config_file):
   try:
     with open(config_file) as json_file:
       config = json.load(json_file)
-  except:
+  except [FileNotFoundError, IOError]:
     message = "Could not open configuration file " + config_file
     logger.error(message)
     sys.exit(message)
@@ -38,7 +39,7 @@ if not os.path.exists(records_dir):
     sys.exit(message)
 
 @app.route('/api/v1/record', methods=['POST'])
-def apiRecord():
+def api_record():
   data = request.get_json()
   if data and data['uuid'] and data['timestamp'] and data['data']:
     filename = records_dir + "/" + data['uuid'] + "_" + data['timestamp'] + ".json"
