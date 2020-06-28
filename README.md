@@ -12,16 +12,23 @@ This repository contains a reference implementation of the following solution:
 * The gunicorn is proxied by Nginx in order to support TLS certificates and port mapping from port 443 to gunicorn
 * The solution is integration tested (both the client and the API service) using behave for BDD
 
+# API
+```
+curl -k -X POST -H 'Authorization: Bearer token-goes-here' -H "Content-Type: application/json" \
+  -d '{"uuid" : "a9201032-1e1f-40a2-8995-8472a76dd7d2", "timestamp" : "1593338576.5624585", "data":[ ... ]}' \ 
+https://<service-api-IP>/api/v1/record
+```
+
 # Security
-The ansible file is provisioned with a login username and password, which is expected to be the same for both servers.
+* The ansible file is provisioned with a login username and password, which is expected to be the same for both servers.
 In a production environment, the two servers may have the same username, but passwords should be cycled regularly. Even
 better would be to lock the servers down to specific white-listed IPs, disable root login and enable key authentication.
 The system ansible is run from then can login without requiring a username and password. 
 
-The ansible provisioning configures nginx with a self-signed certificate. For production environments this should be
+* The ansible provisioning configures nginx with a self-signed certificate. For production environments this should be
 replaced with Certbot (lets-encrypt) once DNS has been configured so that the FQDN for the server resolves correctly.
 
-Communication with the API service is over SSL and secured using simple bearer token. The token is configured in config.json
+* Communication with the API service is over SSL and secured using simple bearer token. The token is configured in config.json
 
 # Installation and provisioning
 ## Ansible configuration and support
@@ -64,7 +71,7 @@ Log into the client and configure in config.json the node uuid, secure token and
 ```
 {
   'uuid' : 'a9201032-1e1f-40a2-8995-8472a76dd7d2',
-  'token' : 'somesecuretoken',
+  'token' : 'token-goes-here',
   'url'  : 'https://192.168.1.221/api/v1/record'
 }
 ```
@@ -100,6 +107,24 @@ or an error:
 ```{"status":"error", "message":"Could not write to records/3944eb9c-b927-11ea-b3de-0242ac130004_1593338576.5624585.json"}```
 
 # Testing
+The API service provides a test API in support of integration testing:
+
+```
+flask run
+
+curl -k -X GET -H 'Authorization: Bearer token-goes-here' -H "Content-Type: application/json" http://127.0.0.1:5000/api/test/count
+
+{"data":{"count":1067},"status":"success"}
+
+curl -k -X GET -H 'Authorization: Bearer token-goes-here' -H "Content-Type: application/json" http://127.0.0.1:5000/api/test/latest
+
+{"data":
+  {"content":[{"cmdline":["/usr/lib/systemd/systemd","--switched-root","--system","--deserialize","22"],"connections":null,"cpu_affinity":[0],"cpu_num":0,"cpu_percent":0.0,"cpu_times":[0.26,1.23,30.97,13.44,0.09],"create_time":1593293380.06,"cwd":null,"environ":null,"exe":"/usr/lib/systemd/systemd","gids":[0,0,0],"io_counters":null,"ionice":[0,0],"memory_full_info":null,"memory_info":[6782976,131088384,4235264,1454080,0,86323200,0],"memory_maps":null,"memory_percent":0.35194878890086134,"name":"systemd","nice":0,"num_ctx_switches":[2210,3039],"num_fds":null,"num_threads":1,"open_files":null,"pid":1,"ppid":0,"status":"sleeping","terminal":null,"threads":[[1,0.26,1.22]],"uids":[0,0,0],"username":"root"}],
+   "filename":"records/development_1593338576.5624585.json"},
+ "status":"success"}
+
+```
+
 ## Provisioning
 * Since provisioning is performed using ansible it is easy to run the ansible playbooks against the client and the
 service API. The playbooks report step by step the success or failure of their operation.
@@ -117,6 +142,9 @@ service API. The playbooks report step by step the success or failure of their o
 ## End-to-end integration
 * features/integration.feature defines all client tests
 * These have been implemented using behave
+* On the testing machine: ```pip install behave```
+* Add the testing machine's public key to the service API system's .ssh/authorized_keys file
+* Configure the IPs and username in features/steps/integration.py
 * Run the test suite using:
 ```
 source venv/bin/activate
