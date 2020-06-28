@@ -5,8 +5,10 @@ import time
 import logging
 import flask
 from flask import Flask, request, jsonify
+from flask_httpauth import HTTPTokenAuth
 
 app = Flask(__name__)
+auth = HTTPTokenAuth(scheme='Bearer')
 
 logger = logging.getLogger("service")
 logger.setLevel(level=logging.DEBUG)
@@ -43,7 +45,12 @@ if not os.path.exists(records_dir):
     logger.error(message)
     sys.exit(message)
 
+@auth.verify_token
+def verify_token(token):
+  return token == config['token']
+
 @app.route('/api/v1/record', methods=['POST'])
+@auth.login_required
 def api_record():
   data = request.get_json()
   if data and data['uuid'] and data['timestamp'] and data['data']:
