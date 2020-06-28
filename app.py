@@ -8,6 +8,11 @@ from flask import Flask, request, jsonify
 app = Flask(__name__)
 
 logger = logging.getLogger("service")
+logger.setLevel(level=logging.DEBUG)
+file_handler = logging.FileHandler("service.log")
+file_handler.setLevel(logging.DEBUG)
+logger.addHandler(file_handler)
+
 config_file = 'config.json'
 config = {}
 if os.path.exists(config_file):
@@ -45,6 +50,7 @@ def apiRecord():
     try:
       with open(filename, "w") as file:
         file.write(json.dumps(data['data']))
+      logger.info(data['uuid'] + ": " + data['timestamp'])
     except IOError:
       logger.error("Could not write to " + filename)
       return jsonify({'status' : 'error', 'message' : message})
