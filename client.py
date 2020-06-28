@@ -18,7 +18,7 @@ def report():
     data.append(proc.info)
 
   content = {"uuid": config["uuid"], "timestamp": str(time.time()), "data": data}
-  headers = {"Content-type": "application/json", "Accept": "text/plain"}
+  headers = {"Content-type": "application/json", "Accept": "text/plain", "Authorization": "Bearer " + config['token']}
   try:
     r = requests.post(url, data=json.dumps(content), headers=headers, verify=False)
     logger.info("Response code: " + str(r.status_code))
