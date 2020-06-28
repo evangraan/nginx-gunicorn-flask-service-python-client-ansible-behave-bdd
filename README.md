@@ -58,18 +58,27 @@ Log into the client and configure in config.json the node uuid, secure token and
 
 # Functional overview
 ## Client application
+* TBD cron is used to schedule running of the client application every 5 seconds. This is done in clientapp.yml (ansible)
 * The client application timestamps records when measurement is taken (seconds since epoch)
+* The client application logs to client.log
 
 ## API Service
+* The client application logs to service.log
 * The API service makes use of JSend (https://github.com/omniti-labs/jsend) for all responses.
 * The API uses the uuid and timestamp fields provided by the client application to store new records. File names follow
 the scheme: <uuid>_<timestamp>.json E.g. 3944eb9c-b927-11ea-b3de-0242ac130004_1593338576.5624585.json
 * The API service is configured using config.json and records are stored as per the <records_dir> directory.  
+* TBD cron is used to schedule cleanup of records older than 1 week to avoid disk space bloat
 
 The server responds with either success:
 ```{"data":{"timestamp":"1593338576.5624585","uuid":"a9201032-1e1f-40a2-8995-8472a76dd7d2"},"status":"success"}```
 or an error:
 ```{"status":"error", "message":"Could not write to records/3944eb9c-b927-11ea-b3de-0242ac130004_1593338576.5624585.json"}```
 
+# Future Improvements
+* Split the client and API service into separate git repos (or in the ansible, clone only relevant components)
+* Improve the secure token mechanism with an injected token obtained from a secure configuration service
+* If DNS is configured and lets-encrypt SSL certificates used, remove "verify=False" from client.py
+* Teach ansible to read the service configuration file and set the cleanup period according to a 'keep-records' field
 
 

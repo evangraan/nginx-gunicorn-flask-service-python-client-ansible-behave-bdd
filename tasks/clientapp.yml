@@ -30,6 +30,7 @@
       virtualenv_python: python3.6.8
 
   - name: Install supporting libraries
+    become: true
     pip:
       name:
         - requests
