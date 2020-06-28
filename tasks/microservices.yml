@@ -162,3 +162,17 @@
   - name: Ensure service and nginx are running and starts on boot
     become: true
     shell: "{{ service_directory }}/start_services.sh&"
+
+  - name: Check once a day and clean out records older than 1 week
+    become: true
+    copy:
+      src: "{{ service_directory }}/records.cron"
+      remote_src: yes
+      dest: /etc/cron.daily/records.cron
+
+  - name: Configure the cron entry with the correct username
+    become: true
+    replace:
+      path: /etc/cron.daily/records.cron
+      regexp: "USER"
+      replace: "{{ ansible_user }}"

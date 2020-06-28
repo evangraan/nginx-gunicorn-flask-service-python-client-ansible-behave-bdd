@@ -91,7 +91,7 @@ tail -f /home/<user>/client/client.log
 * The API uses the uuid and timestamp fields provided by the client application to store new records. File names follow
 the scheme: <uuid>_<timestamp>.json E.g. 3944eb9c-b927-11ea-b3de-0242ac130004_1593338576.5624585.json
 * The API service is configured using config.json and records are stored as per the <records_dir> directory.  
-* TBD cron is used to schedule cleanup of records older than 1 week to avoid disk space bloat
+* cron is used to schedule cleanup of records older than 1 week to avoid disk space bloat
 
 The server responds with either success:
 ```{"data":{"timestamp":"1593338576.5624585","uuid":"a9201032-1e1f-40a2-8995-8472a76dd7d2"},"status":"success"}```

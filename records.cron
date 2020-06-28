@@ -1,0 +1,4 @@
+#!/bin/sh
+find /home/USER/service/records/ -type f -mtime +7 -exec rm -f {} \;
+
+exit 0
