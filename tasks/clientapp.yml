@@ -1,0 +1,38 @@
+---
+
+  - name: upgrade all packages
+    become: true
+    yum:
+      name:
+        - "*"
+      state: latest
+
+  - set_fact:
+     client_directory: "/home/{{ ansible_user }}/client"
+
+  - name: Check client directory
+    stat:
+      path: "{{ client_directory }}"
+    register: client_directory_exists
+
+  - name: Clone client if not present
+    become: false
+    git:
+      repo: https://github.com/evangraan/nginx-gunicorn-flask-service-python-client-ansible-provisioning-behave-bdd.git
+      dest: "{{ client_directory }}"
+    when: client_directory_exists.stat.exists == false
+
+  - name: Install client environment
+    become: false
+    pip:
+      requirements: "{{ client_directory }}/client-requirements.txt"
+      virtualenv: "{{ client_directory }}/venv"
+      virtualenv_python: python3.6.8
+
+  - name: Install supporting libraries
+    pip:
+      name:
+        - requests
+        - psutil
+      state: present
+      executable: pip3

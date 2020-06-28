@@ -22,7 +22,7 @@ The ansible provisioning configures nginx with a self-signed certificate. For pr
 replaced with Certbot (lets-encrypt) once DNS has been configured so that the FQDN for the server resolves correctly.
 
 
-# Installation
+# Installation and provisioning
 ## Ansible configuration and support
 * Install ansible
 * Install sshpass
@@ -33,11 +33,43 @@ repository  serves as a reference
 ## API Server
 ```ansible-playbook -i hosts api.yml```
 
+Log into the API server and configure in config.json the record directory and secure token:
+
+```
+{
+  'records_dir' : 'records',
+  'token' : 'somesecuretoken'
+}
+```
 
 ## Client
 
+```ansible-playbook -i hosts client.yml```
+
+Log into the client and configure in config.json the node uuid, secure token and API URL:
+
+```
+{
+  'uuid' : 'a9201032-1e1f-40a2-8995-8472a76dd7d2',
+  'token' : 'somesecuretoken',
+  'url'  : 'https://192.168.1.221/api/v1/record'
+}
+```
+
+# Functional overview
+## Client application
+* The client application timestamps records when measurement is taken (seconds since epoch)
+
 ## API Service
-The API service makes use of JSend (https://github.com/omniti-labs/jsend) for all responses.
+* The API service makes use of JSend (https://github.com/omniti-labs/jsend) for all responses.
+* The API uses the uuid and timestamp fields provided by the client application to store new records. File names follow
+the scheme: <uuid>_<timestamp>.json E.g. 3944eb9c-b927-11ea-b3de-0242ac130004_1593338576.5624585.json
+* The API service is configured using config.json and records are stored as per the <records_dir> directory.  
+
+The server responds with either success:
+```{"data":{"timestamp":"1593338576.5624585","uuid":"a9201032-1e1f-40a2-8995-8472a76dd7d2"},"status":"success"}```
+or an error:
+```{"status":"error", "message":"Could not write to records/3944eb9c-b927-11ea-b3de-0242ac130004_1593338576.5624585.json"}```
 
 
 
