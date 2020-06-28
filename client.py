@@ -50,13 +50,18 @@ else:
 
 uuid = config['uuid']
 if not uuid:
-  message = "client's uuid not configured in config.json"
+  message = "client uuid not configured in config.json"
   logger.error(message)
   sys.exit(message)
 
 url = config['url']
 if not url:
-  message = "server's url not configured in config.json"
+  message = "server url not configured in config.json"
+  logger.error(message)
+  sys.exit(message)
+
+if not config['token']:
+  message = "bearer token not configured in config.json"
   logger.error(message)
   sys.exit(message)
 

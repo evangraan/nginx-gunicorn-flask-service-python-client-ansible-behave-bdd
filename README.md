@@ -99,10 +99,36 @@ The server responds with either success:
 or an error:
 ```{"status":"error", "message":"Could not write to records/3944eb9c-b927-11ea-b3de-0242ac130004_1593338576.5624585.json"}```
 
+# Testing
+## Provisioning
+* Since provisioning is performed using ansiblem it is easy to run the ansible playbooks against the client and the
+service API.
+* The playbooks are idempotent and can safely be run against systems already operational.
+* features/provisioning.feature defines test cases to verify after ansible has successfully completed plays
+
+## Client
+* features/client.feature defines all client tests
+* These have been manually tested
+
+## Service API
+* features/api.feature defines all client tests
+* These have been manually tested
+
+## End-to-end integration
+* features/integration.feature defines all client tests
+* These have been implemented using behave
+* Run the test suite using:
+```
+source venv/bin/activate
+behave features/integration.feature
+```
+
 # Future Improvements
 * Split the client and API service into separate git repos (or in the ansible, clone only relevant components)
 * Improve the secure token mechanism with an injected token obtained from a secure configuration service
 * If DNS is configured and lets-encrypt SSL certificates used, remove "verify=False" from client.py
 * Teach ansible to read the service configuration file and set the cleanup period according to a 'keep-records' field
 * The service names 'service' and 'client' should be something more meaningful
+* Though all tests have been defined, the only tests implemented are integration tests. Automate all tests using 
+behave (as per the end-to-end integration example)
 
