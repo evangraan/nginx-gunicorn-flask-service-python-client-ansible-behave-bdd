@@ -79,8 +79,8 @@ def latest_record():
   data = {'filename': latest}
 
   try:
-    with open(latest) as json_file:
-      content = json.load(json_file)
+    with open(latest) as file:
+      content = json.load(file)
   except [FileNotFoundError, IOError]:
     logger.error("Test API could open record " + latest)
   data['content'] = content

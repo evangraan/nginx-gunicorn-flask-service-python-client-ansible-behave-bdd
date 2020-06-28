@@ -159,4 +159,6 @@ behave features/integration.feature
 * The service names 'service' and 'client' should be something more meaningful
 * Though all tests have been defined, the only tests implemented are integration tests. Automate all tests using 
 behave (as per the end-to-end integration example)
+* This is a very small project. It is right on the edge of being large enough though to start breaking out classes. If
+this grows at all going forward, I'd refactor it.
 
