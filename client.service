@@ -1,0 +1,12 @@
+[Unit]
+Description=Reference python client
+After=network.target
+
+[Service]
+User=USER
+Group=USER
+WorkingDirectory=/home/USER/client
+ExecStart=/bin/bash -c "cd /home/USER/client&&source venv/bin/activate&&python client.py"
+
+[Install]
+WantedBy=multi-user.target

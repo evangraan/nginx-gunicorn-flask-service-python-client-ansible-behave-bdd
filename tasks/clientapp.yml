@@ -37,3 +37,27 @@
         - psutil
       state: present
       executable: pip3
+
+  - name: Add the client to systemd
+    become: true
+    copy:
+      src: "{{ client_directory }}/client.service"
+      remote_src: yes
+      dest: /etc/systemd/system/client.service
+
+  - name: Configure the client with the correct username
+    become: true
+    replace:
+      path: /etc/systemd/system/client.service
+      regexp: "USER"
+      replace: "{{ ansible_user }}"
+
+  - name: Make client management script executable
+    file:
+      path: "{{ client_directory }}/start_client.sh"
+      state: touch
+      mode: u+x
+
+  - name: Ensure client is running and starts on boot
+    become: true
+    shell: "{{ client_directory }}/start_client.sh&"

@@ -42,6 +42,18 @@ Log into the API server and configure in config.json the record directory and se
 }
 ```
 
+Life-cycle:
+
+```
+sudo systemctl stop service
+sudo systemctl start service
+sudo systemctl restart service
+sudo systemctl status service
+sudo journalctl -u service
+(as root) tail -f /var/log/nginx/*.log /home/<user>/service/service.log
+ls -la /home/<user>/service/<records_dir>/
+```
+
 ## Client
 
 ```ansible-playbook -i hosts client.yml```
@@ -54,6 +66,17 @@ Log into the client and configure in config.json the node uuid, secure token and
   'token' : 'somesecuretoken',
   'url'  : 'https://192.168.1.221/api/v1/record'
 }
+```
+
+Life-cycle:
+
+```
+sudo systemctl stop client
+sudo systemctl start client
+sudo systemctl restart client
+sudo systemctl status client
+sudo journalctl -u client
+tail -f /home/<user>/client/client.log
 ```
 
 # Functional overview
@@ -80,5 +103,5 @@ or an error:
 * Improve the secure token mechanism with an injected token obtained from a secure configuration service
 * If DNS is configured and lets-encrypt SSL certificates used, remove "verify=False" from client.py
 * Teach ansible to read the service configuration file and set the cleanup period according to a 'keep-records' field
-
+* The service names 'service' and 'client' should be something more meaningful
 
