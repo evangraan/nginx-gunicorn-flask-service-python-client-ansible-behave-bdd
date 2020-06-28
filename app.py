@@ -1,5 +1,6 @@
 import os
 import sys
+import glob
 import json
 import time
 import logging
@@ -64,5 +65,28 @@ def api_record():
       return jsonify({'status' : 'error', 'message' : message})
     return jsonify({'status' : 'success', 'data' : { 'uuid' : data['uuid'], 'timestamp' : data['timestamp'] }})
 
+@app.route('/api/test/count', methods=['GET'])
+@auth.login_required
+def count_records():
+  n = len([name for name in os.listdir(records_dir) if os.path.isfile(os.path.join(records_dir, name))])
+  return jsonify({'status' : 'success', 'data' : { 'count' : n}})
+
+@app.route('/api/test/latest', methods=['GET'])
+@auth.login_required
+def latest_record():
+  files = glob.glob(records_dir + '/*.json')
+  latest = max(files, key=os.path.getctime)
+  data = {'filename': latest}
+
+  try:
+    with open(latest) as json_file:
+      content = json.load(json_file)
+  except [FileNotFoundError, IOError]:
+    logger.error("Test API could open record " + latest)
+  data['content'] = content
+
+  return jsonify({'status' : 'success', 'data' : data})
+
 if __name__ == "__main__":
   app.run(host='127.0.0.1')
+
