@@ -49,6 +49,7 @@
       name:
         - gunicorn
         - flask
+        - flask_httpauth
       state: present
       executable: pip3
 

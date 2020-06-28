@@ -41,6 +41,8 @@ repository  serves as a reference
 ## API Server
 ```ansible-playbook -i hosts api.yml```
 
+*Note: ssh to the host first so that your ansible system can recognize the ECDSA key fingerprint*
+
 Log into the API server and configure in config.json the record directory and secure token:
 
 ```
@@ -65,6 +67,8 @@ ls -la /home/<user>/service/<records_dir>/
 ## Client
 
 ```ansible-playbook -i hosts client.yml```
+
+*Note: ssh to the host first so that your ansible system can recognize the ECDSA key fingerprint*
 
 Log into the client and configure in config.json the node uuid, secure token and API URL:
 
@@ -159,6 +163,7 @@ behave features/integration.feature
 * The service names 'service' and 'client' should be something more meaningful
 * Though all tests have been defined, the only tests implemented are integration tests. Automate all tests using 
 behave (as per the end-to-end integration example)
+* Improve the BDD steps to read the config from hosts and config.py instead of requiring manual entry
 * This is a very small project. It is right on the edge of being large enough though to start breaking out classes. If
 this grows at all going forward, I'd refactor it.
 

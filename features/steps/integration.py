@@ -20,12 +20,11 @@ def check_records(context):
 
 @given(u'a client running')
 def step_impl(context):
-   context.client_ip = '192.168.1.225'
    context.client_uuid = 'a9201032-1e1f-40a2-8995-8472a76dd7d2'
 
 @given(u'a service API running')
 def step_impl(context):
-    context.api_ip = '192.168.1.224'
+    context.api_ip = '192.168.1.227'
     context.url = 'https://' + context.api_ip
 
 @given(u'client credentials')
