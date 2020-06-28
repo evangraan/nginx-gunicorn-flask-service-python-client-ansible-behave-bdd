@@ -6,8 +6,8 @@ This repository contains a reference implementation of the following solution:
 * A server instance running CentOS 7
 * The client and server are both provisioned using Ansible
 * A python client is scheduled to run every 5 seconds using cron
-* The python client retrieves a process list and ships it as JSON to the server API, secured with a secret key
-* A flask API service receives the request and writes the process list to a JSON file with the filename = rx timestamp
+* The python client retrieves a process list and ships it as JSON to the server API, secured with a bearer token
+* A flask API service receives the request and writes the process list to a JSON file
 * The flask service is served using gunicorn for WSGI capability and in order to handle high load
 * The gunicorn is proxied by Nginx in order to support TLS certificates and port mapping from port 443 to gunicorn
 * The solution is integration tested (both the client and the API service) using behave for BDD
@@ -21,7 +21,7 @@ The system ansible is run from then can login without requiring a username and p
 The ansible provisioning configures nginx with a self-signed certificate. For production environments this should be
 replaced with Certbot (lets-encrypt) once DNS has been configured so that the FQDN for the server resolves correctly.
 
-Communication with the API service is secured using simple bearer token. The tokn is configured in config.json
+Communication with the API service is over SSL and secured using simple bearer token. The token is configured in config.json
 
 # Installation and provisioning
 ## Ansible configuration and support
@@ -87,11 +87,11 @@ tail -f /home/<user>/client/client.log
 * The client application logs to client.log
 
 ## API Service
-* The client application logs to service.log
-* The API service makes use of JSend (https://github.com/omniti-labs/jsend) for all responses.
+* The API service logs to service.log
+* The API service makes use of JSend (https://github.com/omniti-labs/jsend) for its response.
 * The API uses the uuid and timestamp fields provided by the client application to store new records. File names follow
-the scheme: <uuid>_<timestamp>.json E.g. 3944eb9c-b927-11ea-b3de-0242ac130004_1593338576.5624585.json
-* The API service is configured using config.json and records are stored as per the <records_dir> directory.  
+the scheme: *uuid*_*timestamp*.json E.g. 3944eb9c-b927-11ea-b3de-0242ac130004_1593338576.5624585.json
+* The API service is configured using config.json and records are stored as per the *records_dir* directory.  
 * cron is used to schedule cleanup of records older than 1 week to avoid disk space bloat
 
 The server responds with either success:
@@ -101,8 +101,8 @@ or an error:
 
 # Testing
 ## Provisioning
-* Since provisioning is performed using ansiblem it is easy to run the ansible playbooks against the client and the
-service API.
+* Since provisioning is performed using ansible it is easy to run the ansible playbooks against the client and the
+service API. The playbooks report step by step the success or failure of their operation.
 * The playbooks are idempotent and can safely be run against systems already operational.
 * features/provisioning.feature defines test cases to verify after ansible has successfully completed plays
 
@@ -111,7 +111,7 @@ service API.
 * These have been manually tested
 
 ## Service API
-* features/api.feature defines all client tests
+* features/api.feature defines all API tests
 * These have been manually tested
 
 ## End-to-end integration
@@ -125,7 +125,7 @@ behave features/integration.feature
 
 # Future Improvements
 * Split the client and API service into separate git repos (or in the ansible, clone only relevant components)
-* Improve the secure token mechanism with an injected token obtained from a secure configuration service
+* Improve the secure token mechanism (e.g. with an injected token obtained from a secure configuration service)
 * If DNS is configured and lets-encrypt SSL certificates used, remove "verify=False" from client.py
 * Teach ansible to read the service configuration file and set the cleanup period according to a 'keep-records' field
 * The service names 'service' and 'client' should be something more meaningful
