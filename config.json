@@ -1,3 +1,6 @@
 {
-  "records_dir" : "records"
+  "records_dir" : "records",
+  "token" : "my3m45hl;kw4hn900bdfnb9fegherjyerlgjHWRTHRThp0qerh!;lfdskfgjsdjgpb9e09-$",
+  "url" : "https://192.168.1.221/api/v1/record",
+  "uuid" : "a9201032-1e1f-40a2-8995-8472a76dd7d2"
 }
