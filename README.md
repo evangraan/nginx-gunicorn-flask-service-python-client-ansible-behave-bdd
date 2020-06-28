@@ -21,6 +21,7 @@ The system ansible is run from then can login without requiring a username and p
 The ansible provisioning configures nginx with a self-signed certificate. For production environments this should be
 replaced with Certbot (lets-encrypt) once DNS has been configured so that the FQDN for the server resolves correctly.
 
+Communication with the API service is secured using simple bearer token. The tokn is configured in config.json
 
 # Installation and provisioning
 ## Ansible configuration and support

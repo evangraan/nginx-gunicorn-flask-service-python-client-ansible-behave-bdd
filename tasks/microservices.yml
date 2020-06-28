@@ -176,3 +176,10 @@
       path: /etc/cron.daily/records.cron
       regexp: "USER"
       replace: "{{ ansible_user }}"
+
+  - name: Make the cron entry executable
+    become: true
+    file:
+      path: /etc/cron.daily/records.cron
+      state: touch
+      mode: ug+x
