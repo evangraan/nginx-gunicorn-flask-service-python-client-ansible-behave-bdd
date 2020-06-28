@@ -24,7 +24,7 @@ def step_impl(context):
 
 @given(u'a service API running')
 def step_impl(context):
-    context.api_ip = '192.168.1.227'
+    context.api_ip = '87.254.4.244'
     context.url = 'https://' + context.api_ip
 
 @given(u'client credentials')
@@ -56,7 +56,7 @@ def step_impl(context):
 @then(u'the records are timestamped')
 def step_impl(context):
     filename = find_last_record(context)
-    assert(len(re.findall("\d{10}\.\d{7}", filename)) > 0)
+    assert(len(re.findall("\d{10}\.\d{6}", filename)) > 0)
 
 
 @then(u'the records contain JSON process lists')

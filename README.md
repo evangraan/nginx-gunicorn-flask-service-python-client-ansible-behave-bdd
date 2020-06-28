@@ -166,4 +166,5 @@ behave (as per the end-to-end integration example)
 * Improve the BDD steps to read the config from hosts and config.py instead of requiring manual entry
 * This is a very small project. It is right on the edge of being large enough though to start breaking out classes. If
 this grows at all going forward, I'd refactor it.
+* There are a couple of ansible work-arounds where ansible did not work as advertised that I'd love to resolve
 

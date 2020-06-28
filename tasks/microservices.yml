@@ -53,23 +53,23 @@
       state: present
       executable: pip3
 
-  - name: start service firewald
-    become: true
-    systemd:
-      name: firewalld
-      state: started
+  #- name: start service firewald
+  #  become: true
+  #  systemd:
+  #    name: firewalld
+  #    state: started
 
-  - name: Open firewall port 22
-    become: true
-    firewalld: port=22/tcp zone=public permanent=true state=enabled immediate=yes
+  #- name: Open firewall port 22
+  #  become: true
+  #  firewalld: port=22/tcp zone=public permanent=true state=enabled immediate=yes
 
-  - name: Open firewall port 80
-    become: true
-    firewalld: port=80/tcp zone=public permanent=true state=enabled immediate=yes
+  #- name: Open firewall port 80
+  #  become: true
+  #  firewalld: port=80/tcp zone=public permanent=true state=enabled immediate=yes
 
-  - name: Open firewall port 443
-    become: true
-    firewalld: port=443/tcp zone=public permanent=true state=enabled immediate=yes
+  #- name: Open firewall port 443
+  #  become: true
+  #  firewalld: port=443/tcp zone=public permanent=true state=enabled immediate=yes
 
   - name: Create socket for gunicorn
     become: true
